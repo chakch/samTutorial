@@ -1,0 +1,57 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+    sam-app
+
+    Sample SAM Template for sam-app
+# More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
+Globals:
+  Function:
+    Timeout: 300
+
+Resources:
+  AudioTranscoderFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: audio_transcoder/
+      Handler: handler.hello
+      Runtime: nodejs8.10
+#      Events:
+  RssReaderFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: rss_reader/
+      Handler: handler.hello
+      Runtime: nodejs8.10
+#      Events:
+
+  ServerlessXkeDemoBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: serverless-xke-demo
+  Article:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: article
+      AttributeDefinitions:
+      - AttributeName: id
+        AttributeType: S
+      KeySchema:
+      - AttributeName: id
+        KeyType: HASH
+      ProvisionedThroughput:
+        ReadCapacityUnits: 1
+        WriteCapacityUnits: 1
+      StreamSpecification:
+        StreamViewType: NEW_IMAGE
+#Outputs:
+#
+#  AudioTranscoderIamRole:
+#    Description: "Implicit IAM Role created for audio transcoder function"
+#    Value: !GetAtt AudiTranscoderFunction.Arn
+#  RssReaderFunctionIamRole:
+#    Description: "Implicit IAM Role created for audio transcoder function"
+#    Value: !GetAtt AudiTranscoderFunction.Arn
+
+
+#sam local invoke RssReaderFunction -e event.json

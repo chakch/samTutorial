@@ -1,0 +1,42 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'sam-app
+
+  Sample SAM Template for sam-app
+
+  '
+Globals:
+  Function:
+    Timeout: 300
+Resources:
+  Article:
+    Properties:
+      AttributeDefinitions:
+      - AttributeName: id
+        AttributeType: S
+      KeySchema:
+      - AttributeName: id
+        KeyType: HASH
+      ProvisionedThroughput:
+        ReadCapacityUnits: 1
+        WriteCapacityUnits: 1
+      StreamSpecification:
+        StreamViewType: NEW_IMAGE
+      TableName: article
+    Type: AWS::DynamoDB::Table
+  AudioTranscoderFunction:
+    Properties:
+      CodeUri: s3://mohamed-chaaben-bucket/f1d596cc9cd97f548a66933fc4bf6b01
+      Handler: handler.hello
+      Runtime: nodejs8.10
+    Type: AWS::Serverless::Function
+  RssReaderFunction:
+    Properties:
+      CodeUri: s3://mohamed-chaaben-bucket/e56ccc63a22b6e97e7f4643f0950cc28
+      Handler: handler.hello
+      Runtime: nodejs8.10
+    Type: AWS::Serverless::Function
+  ServerlessXkeDemoBucket:
+    Properties:
+      BucketName: serverless-xke-demo
+    Type: AWS::S3::Bucket
+Transform: AWS::Serverless-2016-10-31
