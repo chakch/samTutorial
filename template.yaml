@@ -80,6 +80,6 @@ Resources:
 
 
 #sam local invoke RssReaderFunction -e event.json
-#AWS_PROFILE=mchaaben sam package     --template-file template.yaml     --output-template-file packaged.yaml     --s3-bucket mohamed-chaaben-bucket
-#AWS_PROFILE=mchaaben sam deploy     --template-file packaged.yaml     --stack-name sam-app
-
+#AWS_PROFILE=mchaaben sam package     --template-file template.yaml     --output-template-file packaged.yaml     --s3-bucket mohamed-chaaben-bucket-central-1
+#AWS_PROFILE=mchaaben sam deploy     --template-file packaged.yaml  --capabilities CAPABILITY_IAM   --stack-name sam-app
+#AWS_PROFILE=mchaaben aws cloudformation delete-stack --stack-name sam-app
