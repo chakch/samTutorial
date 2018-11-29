@@ -11,11 +11,14 @@ Globals:
 
 Resources:
   AudioTranscoder:
-    Type: 'AWS::Serverless::Function'
+    Type: AWS::Serverless::Function
     Properties:
-      CodeUri: audio_transcoder/
-      Handler: handler.hello
+      CodeUri: audio-transcoder/
+      Handler: transcoder.handler
       Runtime: nodejs8.10
+      Policies:
+        - AmazonPollyFullAccess
+        - AmazonS3FullAccess
       Events:
         DynamoDB1:
           Type: DynamoDB
@@ -26,23 +29,26 @@ Resources:
                 - StreamArn
             StartingPosition: TRIM_HORIZON
             BatchSize: 100
+      Environment:
+        Variables:
+          BUCKET_NAME: serverless-xke-demo
 
   RssReader:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: rss_reader/
-      Handler: handler.hello
+      CodeUri: rss-reader/
+      Handler: reader.handler
       Runtime: nodejs8.10
+      Policies:
+        - AmazonDynamoDBFullAccess
       Events:
-        DynamoDB1:
-          Type: DynamoDB
+        EventCloudWatch:
+          Type: Schedule
           Properties:
-            Stream:
-              'Fn::GetAtt':
-                - Article
-                - StreamArn
-            StartingPosition: TRIM_HORIZON
-            BatchSize: 100
+            Schedule: rate(2400 minutes)
+      Environment:
+        Variables:
+          ARTICLE_TABLE: article
 
   ServerlessXkeDemoBucket:
     Type: AWS::S3::Bucket

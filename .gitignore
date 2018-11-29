@@ -1,4 +1,8 @@
 .idea/workspace.xml
 .idea/vcs.xml
-audio_transcoder/node_modules/
-rss_reader/node_modules/
+audio-transcoder/node_modules/
+audio-transcoder/package-lock.json
+packaged.yaml
+rss-reader/node_modules/
+rss-reader/package-lock.json
+packaged.yaml

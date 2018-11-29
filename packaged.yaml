@@ -25,7 +25,10 @@ Resources:
     Type: AWS::DynamoDB::Table
   AudioTranscoder:
     Properties:
-      CodeUri: s3://mohamed-chaaben-bucket-central-1/f1d596cc9cd97f548a66933fc4bf6b01
+      CodeUri: s3://mohamed-chaaben-bucket-central-1/04f5bd6911271963590c0fbf10cffdeb
+      Environment:
+        Variables:
+          BUCKET_NAME: serverless-xke-demo
       Events:
         DynamoDB1:
           Properties:
@@ -36,13 +39,26 @@ Resources:
               - Article
               - StreamArn
           Type: DynamoDB
-      Handler: handler.hello
+      Handler: transcoder.handler
+      Policies:
+      - AmazonPollyFullAccess
+      - AmazonS3FullAccess
       Runtime: nodejs8.10
     Type: AWS::Serverless::Function
   RssReader:
     Properties:
-      CodeUri: s3://mohamed-chaaben-bucket-central-1/e56ccc63a22b6e97e7f4643f0950cc28
-      Handler: handler.hello
+      CodeUri: s3://mohamed-chaaben-bucket-central-1/7e63761bc71b924078b843381c7417e4
+      Environment:
+        Variables:
+          ARTICLE_TABLE: article
+      Events:
+        EventCloudWatch:
+          Properties:
+            Schedule: rate(2400 minutes)
+          Type: Schedule
+      Handler: reader.handler
+      Policies:
+      - AmazonDynamoDBFullAccess
       Runtime: nodejs8.10
     Type: AWS::Serverless::Function
   ServerlessXkeDemoBucket:
