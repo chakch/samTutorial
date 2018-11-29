@@ -10,20 +10,39 @@ Globals:
     Timeout: 300
 
 Resources:
-  AudioTranscoderFunction:
-    Type: AWS::Serverless::Function
+  AudioTranscoder:
+    Type: 'AWS::Serverless::Function'
     Properties:
       CodeUri: audio_transcoder/
       Handler: handler.hello
       Runtime: nodejs8.10
-#      Events:
-  RssReaderFunction:
+      Events:
+        DynamoDB1:
+          Type: DynamoDB
+          Properties:
+            Stream:
+              'Fn::GetAtt':
+                - Article
+                - StreamArn
+            StartingPosition: TRIM_HORIZON
+            BatchSize: 100
+
+  RssReader:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: rss_reader/
       Handler: handler.hello
       Runtime: nodejs8.10
-#      Events:
+      Events:
+        DynamoDB1:
+          Type: DynamoDB
+          Properties:
+            Stream:
+              'Fn::GetAtt':
+                - Article
+                - StreamArn
+            StartingPosition: TRIM_HORIZON
+            BatchSize: 100
 
   ServerlessXkeDemoBucket:
     Type: AWS::S3::Bucket
@@ -55,3 +74,6 @@ Resources:
 
 
 #sam local invoke RssReaderFunction -e event.json
+#AWS_PROFILE=mchaaben sam package     --template-file template.yaml     --output-template-file packaged.yaml     --s3-bucket mohamed-chaaben-bucket
+#AWS_PROFILE=mchaaben sam deploy     --template-file packaged.yaml     --stack-name sam-app
+
